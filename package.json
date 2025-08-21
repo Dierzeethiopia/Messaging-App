@@ -1,0 +1,20 @@
+{
+  "name": "encrypted-messaging-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A secure messaging app that works on web and iPhone (Expo).",
+  "author": "Dires Abatieneh",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "keywords": ["encrypted", "messaging", "web", "mobile", "react", "expo"]
+}
