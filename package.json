@@ -16,5 +16,8 @@
   "directories": {
     "doc": "docs"
   },
-  "keywords": ["encrypted", "messaging", "web", "mobile", "react", "expo"]
+  "keywords": ["encrypted", "messaging", "web", "mobile", "react", "expo"],
+  "dependencies": {
+    "react-scripts": "^5.0.1"
+  }
 }
