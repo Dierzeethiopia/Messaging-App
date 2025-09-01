@@ -1,32 +1,52 @@
 // src/pages/Home.tsx
 import { Link } from "react-router-dom";
+import "../styles/Chat.css";
 
 function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <h1 className="text-4xl font-bold mb-6">🔐 Encrypted Messenger</h1>
-      <p className="text-lg text-gray-700 mb-4">Welcome to your secure messaging dashboard.</p>
-
-      <div className="space-y-4">
-        <Link
-          to="/chat"
-          className="block px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 text-center"
-        >
-          💬 Go to Chat
-        </Link>
-        <Link
-          to="/profile"
-          className="block px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 text-center"
-        >
-          👤 Profile
-        </Link>
-        <Link
-          to="/settings"
-          className="block px-6 py-3 bg-gray-600 text-white rounded-lg shadow hover:bg-gray-700 text-center"
-        >
-          ⚙️ Settings
-        </Link>
+    <div>
+      <div className="dashboard-header">
+        <span className="dashboard-title">🔐 Encrypted Messenger</span>
+        <nav className="dashboard-nav">
+          <Link to="/profile" className="dashboard-nav-btn">
+            👤 Profile
+          </Link>
+          <Link to="/settings" className="dashboard-nav-btn">
+            ⚙️ Settings
+          </Link>
+        </nav>
       </div>
+      <div className="dashboard-main-content">
+        <div className="dashboard-user-card">
+          <div className="dashboard-avatar">👤</div>
+          <div>
+            <div className="dashboard-username">Welcome, User!</div>
+            <div className="dashboard-status">
+              Your messages are end-to-end encrypted.
+            </div>
+          </div>
+        </div>
+        <div className="dashboard-center-actions">
+          <Link
+            to="/chat"
+            className="dashboard-nav-btn dashboard-center-btn active"
+          >
+            💬 Go to Chat
+          </Link>
+        </div>
+        <div className="dashboard-tips">
+          <h3>Quick Tips</h3>
+          <ul>
+            <li>🔒 All your messages are private and secure.</li>
+            <li>🖼️ Share images and files with your contacts.</li>
+            <li>⚡ Enjoy real-time messaging and notifications.</li>
+          </ul>
+        </div>
+      </div>
+      <footer className="dashboard-footer">
+        &copy; {new Date().getFullYear()} Encrypted Messenger. All rights
+        reserved.
+      </footer>
     </div>
   );
 }

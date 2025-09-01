@@ -1,19 +1,30 @@
 // src/pages/Chat.tsx
 import React, { useState, useRef, useEffect } from "react";
+import "../styles/Chat.css";
+
+interface Message {
+  text: string;
+  sender: "me" | "other";
+  timestamp: string;
+}
 
 const Chat: React.FC = () => {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Auto scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages((prev) => [...prev, input]);
+    const newMessage: Message = {
+      text: input,
+      sender: "me",
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    };
+    setMessages((prev) => [...prev, newMessage]);
     setInput("");
   };
 
@@ -22,42 +33,50 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#ece5dd]">
-      {/* Header */}
-      <div className="p-4 bg-[#075e54] text-white text-lg font-semibold shadow-sm">
-        💬 WhatsApp Clone
-      </div>
+    <div className="telegram-chat-container">
+      {/* Sidebar */}
+      <aside className="telegram-chat-sidebar">
+        <div className="telegram-sidebar-header">Contacts</div>
+        <ul className="telegram-chat-contacts">
+          <li className="telegram-chat-contact active">John Doe</li>
+          <li className="telegram-chat-contact">Alice Smith</li>
+          <li className="telegram-chat-contact">Bob Johnson</li>
+        </ul>
+      </aside>
 
-      {/* Message Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-2 bg-chat-pattern">
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className="max-w-[75%] ml-auto bg-[#dcf8c6] text-gray-900 rounded-lg px-4 py-2 shadow text-sm transition hover:brightness-95"
-          >
-            {msg}
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
+      {/* Main Chat Area */}
+      <main className="telegram-chat-main">
+        <header className="telegram-chat-header">💬 Telegram Style Messenger</header>
 
-      {/* Input Area */}
-      <div className="p-3 bg-[#f0f0f0] border-t flex items-center gap-2">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a message"
-          className="flex-1 px-4 py-2 rounded-full text-sm focus:outline-none border border-gray-300 bg-white shadow-sm"
-        />
-        <button
-          onClick={handleSend}
-          className="px-4 py-2 bg-[#25d366] text-white rounded-full hover:bg-[#20c054] transition font-bold"
-        >
-          Send
-        </button>
-      </div>
+        <div className="telegram-chat-box">
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
+              className={`telegram-chat-message ${msg.sender === "me" ? "telegram-chat-message-me" : "telegram-chat-message-other"}`}
+            >
+              <div className="telegram-chat-bubble">
+                <p className="telegram-chat-text">{msg.text}</p>
+                <span className="telegram-chat-timestamp">{msg.timestamp}</span>
+              </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+
+        <div className="telegram-chat-input-area">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type your message..."
+            className="telegram-chat-input"
+          />
+          <button onClick={handleSend} className="telegram-chat-send-btn">
+            Send
+          </button>
+        </div>
+      </main>
     </div>
   );
 };
