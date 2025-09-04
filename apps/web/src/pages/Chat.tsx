@@ -1,5 +1,6 @@
 // src/pages/Chat.tsx
 import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
 import "../styles/Chat.css";
 
 interface Message {
@@ -13,12 +14,32 @@ const Chat: React.FC = () => {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
+  // Load messages from backend
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/messages");
+        const formattedMessages = res.data.map((msg: any) => ({
+          text: msg.ciphertext, // Ideally decrypt here
+          sender: msg.senderId === localStorage.getItem("userId") ? "me" : "other",
+          timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        }));
+        setMessages(formattedMessages);
+      } catch (err) {
+        console.error("Failed to fetch messages", err);
+      }
+    };
+
+    fetchMessages();
+  }, []);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
+
     const newMessage: Message = {
       text: input,
       sender: "me",
@@ -26,6 +47,16 @@ const Chat: React.FC = () => {
     };
     setMessages((prev) => [...prev, newMessage]);
     setInput("");
+
+    try {
+      await axios.post("http://localhost:4000/messages", {
+        senderId: localStorage.getItem("userId") || "123",
+        recipientId: "some-recipient-id",
+        ciphertext: input,
+      });
+    } catch (err) {
+      console.error("Failed to send message", err);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
